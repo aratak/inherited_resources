@@ -11,7 +11,7 @@ class Venue
   extend ActiveModel::Naming
 end
 
-class Address 
+class Address
   extend ActiveModel::Naming
 end
 
@@ -25,21 +25,21 @@ class VenueController < InheritedResources::Base
   belongs_to :party
 end
 
-# for the slightly pathological 
+# for the slightly pathological
 # /party/37/venue/address case
 class AddressController < InheritedResources::Base
   defaults :singleton => true
-  belongs_to :venue, :singleton => true do
-    belongs_to :party
+  belongs_to :party do
+    belongs_to :venue, :singleton => true
   end
 end
 
 #and the more pathological case
 class GeolocationController < InheritedResources::Base
   defaults :singleton => true
-  belongs_to :address, :singleton => true do
-    belongs_to :venue, :singleton => true do
-      belongs_to :party
+    belongs_to :party do
+      belongs_to :venue, :singleton => true do
+        belongs_to :address, :singleton => true
     end
   end
 end
@@ -92,7 +92,7 @@ class NestedSingletonTest < ActionController::TestCase
     assert_equal mock_venue, assigns(:venue)
     assert_equal mock_address, assigns(:address)
   end
-  
+
   def test_expose_the_address_on_edit
     Party.expects(:find).with('37').returns(mock_party)
     mock_party.expects(:venue).returns(mock_venue)

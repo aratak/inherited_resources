@@ -133,18 +133,11 @@ module InheritedResources
       # current resource).
       #
       def association_chain
-        @association_chain ||= begin
-          symbol_chain = if resources_configuration[:self][:singleton]
-            symbols_for_association_chain.reverse
-          else
-            symbols_for_association_chain
-          end
-
-          symbol_chain.inject([begin_of_association_chain]) do |chain, symbol|
-            chain << evaluate_parent(symbol, resources_configuration[symbol], chain.last)
-          end.compact.freeze
-        end
+        @association_chain ||= symbols_for_association_chain.inject([begin_of_association_chain]) do |chain, symbol|
+          chain << evaluate_parent(symbol, resources_configuration[symbol], chain.last)
+        end.compact.freeze
       end
+
 
       # Overwrite this method to provide other interpolation options when
       # the flash message is going to be set.
@@ -383,4 +376,3 @@ module InheritedResources
       end
   end
 end
-
