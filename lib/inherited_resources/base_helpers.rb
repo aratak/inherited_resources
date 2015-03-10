@@ -28,7 +28,7 @@ module InheritedResources
             # it, otherwise use .all to get a relation.
             set_collection_ivar(c.is_a?(ActiveRecord::Relation) ? c : c.all)
           else
-            set_collection_ivar(c.respond_to?(:scoped) ? c.scoped : c.all)
+            set_collection_ivar(Rails::VERSION::MAJOR < 4 ? c.scoped : c.all)
           end
         end
       end
